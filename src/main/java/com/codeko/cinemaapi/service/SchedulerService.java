@@ -5,6 +5,8 @@ import com.codeko.cinemaapi.repository.entity.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashSet;
 
 @Service
 public class SchedulerService {
@@ -30,11 +32,7 @@ public class SchedulerService {
     }
 
     public String triggerSchedulerJob() {
-        SchedulerJob schedulerJob = SchedulerJob.builder()
-                .created(LocalDateTime.now())
-                .build();
-        schedulerJob = this.save(schedulerJob);
-
+        SchedulerJob schedulerJob = this.save(new SchedulerJob());
 
         Cinema cinema = cinemaService.save(Cinema.builder()
                 .cinemaId("cinemaId-1")
@@ -90,7 +88,7 @@ public class SchedulerService {
                 .datetime(LocalDateTime.now().minusHours(10))
                 .screenName("screen-name-2")
                 .sessionId("session-id-1")
-                .showtimeSystem(md4x)
+                .showtimeSystem(digital)
                 .build());
 
         return "Success";
@@ -98,5 +96,67 @@ public class SchedulerService {
 
     private SchedulerJob save(SchedulerJob schedulerJob) {
         return this.schedulerRepository.save(schedulerJob);
+    }
+
+    public String triggerManyToManySavingProcess() {
+
+        SchedulerJob schedulerJob = new SchedulerJob();
+
+        this.save(schedulerJob);
+
+        Movie thorRagnorok = Movie.builder()
+                .movieName("Thor Ragnorok")
+                .schedulerJob(schedulerJob)
+                .movieCinemas(new HashSet<>())
+                .build();
+
+        Movie jigSaw = Movie.builder()
+                .movieName("Jig Saw")
+                .schedulerJob(schedulerJob)
+                .movieCinemas(new HashSet<>())
+                .build();
+
+        Cinema cvg = Cinema.builder()
+                .cinemaName("CGV")
+                .schedulerJob(schedulerJob)
+                .build();
+
+        Cinema vincom = Cinema.builder()
+                .cinemaName("Vincom")
+                .schedulerJob(schedulerJob)
+                .build();
+
+        cinemaService.save(cvg);
+        cinemaService.save(vincom);
+
+        MovieCinema movieCinema_thorRagnorok = new MovieCinema();
+        movieCinema_thorRagnorok.setMovie(thorRagnorok);
+        movieCinema_thorRagnorok.setCinema(cvg);
+        movieCinema_thorRagnorok.setCreatedDate(new Date());
+        movieCinema_thorRagnorok.setCreatedBy("Cuong Ngo");
+
+        thorRagnorok.getMovieCinemas().add(movieCinema_thorRagnorok);
+
+
+        MovieCinema movieCinema_jigSaw_cgv = new MovieCinema();
+        movieCinema_jigSaw_cgv.setMovie(jigSaw);
+        movieCinema_jigSaw_cgv.setCinema(cvg);
+        movieCinema_jigSaw_cgv.setCreatedDate(new Date());
+        movieCinema_jigSaw_cgv.setCreatedBy("Van Cuong Ngo");
+
+        MovieCinema movieCinema_jigSaw_vicom = new MovieCinema();
+        movieCinema_jigSaw_vicom.setMovie(jigSaw);
+        movieCinema_jigSaw_vicom.setCinema(vincom);
+        movieCinema_jigSaw_vicom.setCreatedDate(new Date());
+        movieCinema_jigSaw_vicom.setCreatedBy("Ngo Van Cuong");
+
+        jigSaw.getMovieCinemas().add(movieCinema_jigSaw_cgv);
+        jigSaw.getMovieCinemas().add(movieCinema_jigSaw_vicom);
+
+        movieService.save(thorRagnorok);
+        movieService.save(jigSaw);
+
+
+        return null;
     }
 }

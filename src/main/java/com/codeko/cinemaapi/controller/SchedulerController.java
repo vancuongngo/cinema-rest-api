@@ -18,4 +18,9 @@ public class SchedulerController extends BaseController {
     public ResponseEntity<String> triggerSchedulerJob() {
         return ResponseEntity.ok().body(schedulerService.triggerSchedulerJob());
     }
+
+    @GetMapping(value = "/many-to-many")
+    public ResponseEntity<String> triggerManyToManySavingProcess() {
+        return ResponseEntity.ok().body(schedulerService.triggerManyToManySavingProcess());
+    }
 }

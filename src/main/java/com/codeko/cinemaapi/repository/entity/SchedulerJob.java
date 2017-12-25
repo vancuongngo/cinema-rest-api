@@ -1,7 +1,7 @@
 package com.codeko.cinemaapi.repository.entity;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "scheduler_job")
-@Builder
+@NoArgsConstructor
 public class SchedulerJob {
 
     @Id
@@ -29,4 +29,15 @@ public class SchedulerJob {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "schedulerJob")
     private Set<Movie> movies;
+
+    @PrePersist
+    private void prePersist() {
+        this.created = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        this.updated = LocalDateTime.now();
+    }
+
 }

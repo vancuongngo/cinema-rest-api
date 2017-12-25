@@ -35,7 +35,7 @@ public class Showtime {
     @Column
     private String attributes;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "showtime_system_id")
     private ShowtimeSystem showtimeSystem;
 

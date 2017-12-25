@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
@@ -22,6 +23,6 @@ public class ShowtimeSystem {
     @Column(nullable = false)
     private String url;
 
-    @OneToOne(mappedBy = "showtimeSystem", cascade = CascadeType.ALL)
-    private Showtime showtime;
+    @OneToMany(mappedBy = "showtimeSystem", cascade = CascadeType.ALL)
+    private Set<Showtime> showtimes;
 }
