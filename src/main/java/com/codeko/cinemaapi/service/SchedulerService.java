@@ -1,5 +1,6 @@
 package com.codeko.cinemaapi.service;
 
+import com.codeko.cinemaapi.annotation.LogExecutionTime;
 import com.codeko.cinemaapi.repository.SchedulerRepository;
 import com.codeko.cinemaapi.repository.entity.*;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class SchedulerService {
         this.schedulerRepository = schedulerRepository;
     }
 
+    @LogExecutionTime(id = "Trigger Scheduler Job", pretty = true)
     public String triggerSchedulerJob() {
         SchedulerJob schedulerJob = this.save(new SchedulerJob());
 
